@@ -8,7 +8,6 @@ const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [passError,setPassError]=useState('')
   const [isPassError,setIsPassError]=useState(false)
-  const [error,setError]=useState('')
   const [isSubmit,setIsSubmit]=useState(false)
 
   useEffect(() => {
@@ -16,23 +15,17 @@ const AuthForm = () => {
       const timer = setTimeout(() => {
         setIsSubmit(false);
       }, 1000); 
-
       return () => clearTimeout(timer);
     }
-
     if (isPassError) {
       const timer = setTimeout(() => {
         setIsPassError(false);
       }, 2000); 
-
       return () => clearTimeout(timer);
     }
-
   }, [isPassError,isSubmit]);
 
  
-
-
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
@@ -53,39 +46,50 @@ const AuthForm = () => {
 
   }
   else{
+    let url;
     if(isLogin){
-       
+      url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD0usF_SA_UnVC10SN__U6lRALDJWrihu8'
     }
     else{
-      fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD0usF_SA_UnVC10SN__U6lRALDJWrihu8' ,{
-        method:'POST',
-        body:JSON.stringify({
-          email:Email,
-          password : Password,
-          returnSecureToken : true
-        }),
-        headers:{
-          'Content-type' : 'application/json'
-        }
-      }).then((res)=>{
-      if(res.ok){
-        alert('Submitted')
+      url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD0usF_SA_UnVC10SN__U6lRALDJWrihu8'
+    }
+    fetch(url,{
+      method:'POST',
+      body:JSON.stringify({
+        email:Email,
+        password : Password,
+        returnSecureToken : true
+      }),
+      headers:{
+        'Content-type' : 'application/json'
       }
-      else{
-        return res.json().then(data=>{
-          setError('Authentication Error')
-          // if(data && data.error && data.error.message){
-          //   setError(data.error.message)
-          // }
-          alert(error)
-        })
-      }
-    })
-  }}
+    }).then((res)=>{
+    if(res.ok){
+      alert('Submitted')
+    }
+    else{
+      return res.json().then(data=>{
+        const error='Authentication Error'
+        // if(data && data.error && data.error.message){
+        //   setError(data.error.message)
+        // }
+        throw new Error(error)
+      })
+    }
+  }).then((data)=>
+  {
+   console.log(data)
+  }).catch((error)=>
+  {
+     alert(error.message)
+  })
+
   enteredEmail.current.value=''
   enteredPassword.current.value=''
 
+  }
  }
+
 
 
   return (
