@@ -1,6 +1,7 @@
 import { useContext, useRef } from 'react';
 import classes from './ProfileForm.module.css';
 import AuthContext from '../../Store/AuthContext';
+import {Link} from 'react-router-dom'
 
 const ProfileForm = () => {
   const changePassword=useRef()
@@ -37,7 +38,9 @@ const ProfileForm = () => {
         <input type='password' id='new-password' minLength='7' ref={changePassword}/>
       </div>
       <div className={classes.action}>
-        <button onClick={SubmitHandler}>Change Password</button>
+        <button onClick={SubmitHandler}>
+          <Link to='/auth'>Change Password</Link>
+        </button>
       </div>
     </form>
   );

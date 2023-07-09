@@ -39,6 +39,11 @@
   border: 1px solid #38015c;
 }
 
+.action button a{
+  color: white;
+  text-decoration: none;
+}
+
 .action button:hover {
   background-color: #540d83;
   border-color: #540d83;

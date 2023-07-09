@@ -2,6 +2,7 @@ import { useState, useRef , useEffect, useContext } from 'react';
 import AuthContext from '../../Store/AuthContext';
 import classes from './AuthForm.module.css';
 
+
 const AuthForm = () => {
   const enteredEmail=useRef()
   const enteredPassword=useRef()
