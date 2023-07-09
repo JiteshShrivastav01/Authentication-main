@@ -1,5 +1,5 @@
-import { useState, useRef , useEffect } from 'react';
-
+import { useState, useRef , useEffect, useContext } from 'react';
+import AuthContext from '../../Store/AuthContext';
 import classes from './AuthForm.module.css';
 
 const AuthForm = () => {
@@ -9,6 +9,7 @@ const AuthForm = () => {
   const [passError,setPassError]=useState('')
   const [isPassError,setIsPassError]=useState(false)
   const [isSubmit,setIsSubmit]=useState(false)
+  const ctx=useContext(AuthContext)
 
   useEffect(() => {
     if (isSubmit) {
@@ -53,40 +54,42 @@ const AuthForm = () => {
     else{
       url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD0usF_SA_UnVC10SN__U6lRALDJWrihu8'
     }
-    fetch(url,{
-      method:'POST',
-      body:JSON.stringify({
-        email:Email,
-        password : Password,
-        returnSecureToken : true
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: Email,
+        password: Password,
+        returnSecureToken: true,
       }),
-      headers:{
-        'Content-type' : 'application/json'
-      }
-    }).then((res)=>{
-    if(res.ok){
-      alert('Submitted')
-    }
-    else{
-      return res.json().then(data=>{
-        const error='Authentication Error'
-        // if(data && data.error && data.error.message){
-        //   setError(data.error.message)
-        // }
-        throw new Error(error)
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+      .then((res) => {
+        setIsLogin(false)
+        if (res.ok) {
+         return res.json()
+          //alert('Logged In');
+        } else {
+          return res.json().then((data) => {
+            const error = 'Authentication Error';
+            // if(data && data.error && data.error.message){
+            //   setError(data.error.message)
+            // }
+            throw new Error(error);
+          });
+        }
       })
-    }
-  }).then((data)=>
-  {
-   console.log(data)
-  }).catch((error)=>
-  {
-     alert(error.message)
-  })
-
+      .then((data) => {
+        console.log(data);
+        ctx.login(data.idToken);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+    
   enteredEmail.current.value=''
   enteredPassword.current.value=''
-
   }
  }
 
