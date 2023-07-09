@@ -6,8 +6,6 @@ const AuthForm = () => {
   const enteredEmail=useRef()
   const enteredPassword=useRef()
   const [isLogin, setIsLogin] = useState(true);
-  const [passError,setPassError]=useState('')
-  const [isPassError,setIsPassError]=useState(false)
   const [isSubmit,setIsSubmit]=useState(false)
   const ctx=useContext(AuthContext)
 
@@ -18,35 +16,19 @@ const AuthForm = () => {
       }, 1000); 
       return () => clearTimeout(timer);
     }
-    if (isPassError) {
-      const timer = setTimeout(() => {
-        setIsPassError(false);
-      }, 2000); 
-      return () => clearTimeout(timer);
-    }
-  }, [isPassError,isSubmit]);
+  }, [isSubmit]);
 
  
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
 
- const SubmitHandler=(e)=>{
-  e.preventDefault()
-  setIsSubmit(true)
-  setIsPassError(false)
-  const Email=enteredEmail.current.value
-  const Password=enteredPassword.current.value
-
-  if(Password.trim().length<6){
-    setIsPassError(true)
-    setPassError('Password length must be greater than 6')
-  }
-
-  if(isPassError){
-
-  }
-  else{
+  const SubmitHandler=(e)=>{
+    e.preventDefault()
+    setIsSubmit(true)
+    const Email=enteredEmail.current.value
+    const Password=enteredPassword.current.value
+    
     let url;
     if(isLogin){
       url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD0usF_SA_UnVC10SN__U6lRALDJWrihu8'
@@ -64,7 +46,7 @@ const AuthForm = () => {
       headers: {
         'Content-type': 'application/json',
       },
-    })
+     })
       .then((res) => {
         setIsLogin(false)
         if (res.ok) {
@@ -91,7 +73,8 @@ const AuthForm = () => {
   enteredEmail.current.value=''
   enteredPassword.current.value=''
   }
- }
+    
+ 
 
 
 
@@ -108,10 +91,10 @@ const AuthForm = () => {
           <input
             type='password'
             id='password'
+            minLength='7'
             ref={enteredPassword}
             required
           />
-          {isPassError && <small className={classes.passError}>{passError}</small>}
         </div>
         <div className={classes.actions}> 
           {!isSubmit && <button type="submit">{isLogin ? 'Login' : 'Create Account'}</button>}
